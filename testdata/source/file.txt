@@ -1,0 +1,2 @@
+Hello from Windows in Docker.
+This is the file it should be copied by using robocopy.
