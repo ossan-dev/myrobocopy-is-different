@@ -6,7 +6,7 @@ win_setup:
 
 # go_build prepares the test binary
 go_build:
-	GOOS=windows go build -o testdata/robocopy.exe cmd/robocopy/main.go
+	GOOS=windows go build -o testdata/go-robocopy.exe cmd/robocopy/main.go
 
 # win_build creates the binary for Windows
 win_build: export_token
