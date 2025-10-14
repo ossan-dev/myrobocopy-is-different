@@ -12,12 +12,15 @@ func main() {
 		fmt.Println("not running on Windows. Running on:", runtime.GOOS)
 		return
 	}
-	cmd := exec.Command("dir")
-	dirs, err := cmd.Output()
-	if err != nil {
+	cmdName := "cmd.exe"
+	cmdArgs := []string{"/c", "dir"} // "/c carries out the command and then terminates"
+	cmd := exec.Command(cmdName, cmdArgs...)
+	var dirs []byte
+	var err error
+	if dirs, err = cmd.Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "error while executing 'dir' cmd:", err.Error())
 		return
 	}
 	fmt.Println("dir:")
-	fmt.Println(dirs)
+	fmt.Println(string(dirs))
 }

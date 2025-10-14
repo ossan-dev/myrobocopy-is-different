@@ -38,3 +38,6 @@ windows/
 
 # testdata
 testdata/target/*
+
+# my own stuff
+notes.md
