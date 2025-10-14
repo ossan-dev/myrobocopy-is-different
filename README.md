@@ -36,7 +36,7 @@ At the moment, the tests are done manually. The steps are:
 
 1. Building the CLI tool via the `make go_build` command
 2. Connect to the Windows container exposed on port `8006`
-3. Open a **Windows PowerShell**
+3. Open a **MS-DOS** session (or **PowerShell**)
 4. `cd C:\Users\Docker\Desktop\Shared`
 5. run `.\robocopy.exe`
 6. check the results

@@ -9,7 +9,7 @@ go_build:
 	GOOS=windows go build -o testdata/go-robocopy.exe cmd/robocopy/main.go
 
 # win_build creates the binary for Windows
-win_build: export_token
+win_build:
 	export GITHUB_TOKEN=$(GITHUB_TOKEN) && GOOS=windows GOARCH=arm64 goreleaser build --snapshot --clean
 
 # win_release_dry_run is the 'no-op' version of the 'win_release' command
@@ -17,5 +17,5 @@ win_release_dry_run:
 	export GITHUB_TOKEN=$(GITHUB_TOKEN) && GOOS=windows GOARCH=arm64 goreleaser release --snapshot --clean --skip=publish
 
 # win_release releases only for Windows by using 'goreleaser'
-win_release: export_token
+win_release:
 	export GITHUB_TOKEN=$(GITHUB_TOKEN) && GOOS=windows GOARCH=arm64 goreleaser release --clean
