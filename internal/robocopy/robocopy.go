@@ -3,33 +3,24 @@ package robocopy
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
+	"os/exec"
 )
 
 const (
-	lowerBoundRobocopySuccessCode = 0
-	upperBoundRobocopySuccessCode = 8
+	fileCopiedStatus = 1
 )
 
-// IsError discerns between actual errors and unhappy status codes provided by "robocopy".
-// 0	No files were copied. No failure was met. No files were mismatched. The files already exist in the destination directory; so the copy operation was skipped.
-// 1	All files were copied successfully.
-// 2	There are some additional files in the destination directory that aren't present in the source directory. No files were copied.
-// 3	Some files were copied. Additional files were present. No failure was met.
-// 5	Some files were copied. Some files were mismatched. No failure was met.
-// 6	Additional files and mismatched files exist. No files were copied and no failures were met. Which means that the files already exist in the destination directory.
-// 7	Files were copied, a file mismatch was present, and additional files were present.
-// 8	Several files didn't copy.
-func IsError(potentialError error) error {
-	segments := strings.Split(potentialError.Error(), " ")
-	resCodeSegment := segments[len(segments)-1]
-	resCode, err := strconv.Atoi(resCodeSegment)
-	if err != nil {
-		return fmt.Errorf("unexpected string value in the last part of the result: %w", err)
+// AssessError discerns between actual errors and unhappy status codes provided by "robocopy".
+//
+// Robocopy will return "1" as exit status code when it copies the file. This is interpreted as an error by the OS.
+// When we get an error, we have to discern between a "false" error (the file has been copied) and an actual error happened for whatever reason.
+func AssessError(cmdResult error) error {
+	exitErr, ok := cmdResult.(*exec.ExitError)
+	if !ok {
+		return fmt.Errorf("generic OS err: %w", cmdResult)
 	}
-	if resCode < lowerBoundRobocopySuccessCode || resCode >= upperBoundRobocopySuccessCode {
-		return fmt.Errorf("something went wrong with 'robocopy': %w", potentialError)
+	if exitErr.ExitCode() == fileCopiedStatus {
+		return nil
 	}
-	return nil
+	return exitErr
 }
