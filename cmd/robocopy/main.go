@@ -6,9 +6,9 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-)
 
-const falsePositiveErr = "exit status 1"
+	"github.com/ossan-dev/robocopy/internal/robocopy"
+)
 
 func main() {
 	if runtime.GOOS != "windows" {
@@ -22,9 +22,11 @@ func main() {
 	cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.Stderr = &cmdErr
 	cmd.Stdout = &cmdOutput
-	if err := cmd.Run(); err != nil && err.Error() != falsePositiveErr {
-		fmt.Fprintln(os.Stdout, err.Error(), ":", cmdErr.String())
-		return
+	if potentialErr := cmd.Run(); potentialErr != nil {
+		if err := robocopy.IsError(potentialErr); err != nil {
+			fmt.Fprintf(os.Stdout, "cli issue: %v", err.Error())
+			return
+		}
 	}
-	fmt.Fprintln(os.Stdout, "Result:", cmdOutput.String())
+	fmt.Fprintln(os.Stdout, cmdOutput.String())
 }
