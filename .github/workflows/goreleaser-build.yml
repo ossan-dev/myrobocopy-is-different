@@ -1,0 +1,21 @@
+name: goreleaser
+run-name: ${{ github.actor }} is releasing the Robocopy command 🚀
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@main
+      - name: release application
+        run: |
+          make --file=cicd.mk win_release_ci
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
