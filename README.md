@@ -41,6 +41,14 @@ At the moment, the tests are done manually. The steps are:
 5. run `.\robocopy.exe`
 6. check the results
 
+## Run
+
+To let the program creating the default file, please set the `DEBUG` environment variable in the shell you're using. On Windows:
+
+```bash
+set DEBUG=true
+```
+
 ## Release
 
 ### Prerequisites
