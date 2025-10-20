@@ -51,12 +51,19 @@ This is the file it should be copied by using robocopy.`); err != nil {
 	}
 
 	flag.Parse()
-	cmdName := "cmd.exe"
-	cmdArgs := []string{cmdName, "/c", "robocopy", sourceDir, targetDir, filename} // "/c carries out the command and then terminates"
-	cmd := exec.Command(cmdName, cmdArgs...)
-	result, err := cmd.Output()
-	if err != nil && robocopy.AssessError(err) != nil {
-		fmt.Fprintf(os.Stderr, "robocopy err: %v", robocopy.AssessError(err).Error())
+	cmd := &exec.Cmd{
+		Path:   "C:\\Windows\\System32\\Robocopy.exe",
+		Args:   []string{"robocopy", sourceDir, targetDir, filename}, // "/c carries out the command and then terminates"
+		Stdout: os.Stdout,
+		Stderr: os.Stdout,
 	}
-	fmt.Fprintln(os.Stdout, string(result))
+	if err := cmd.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "failed starting robocopy: %v", err.Error())
+		return
+	}
+	if err := cmd.Wait(); err != nil {
+		if robocopy.AssessError(err) != nil {
+			fmt.Fprintf(os.Stderr, "robocopy err: %v", robocopy.AssessError(err).Error())
+		}
+	}
 }
