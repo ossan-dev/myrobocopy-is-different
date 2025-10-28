@@ -7,7 +7,9 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 
+	"github.com/ossan-dev/robocopy/internal/file"
 	"github.com/ossan-dev/robocopy/internal/robocopy"
 )
 
@@ -37,15 +39,9 @@ func main() {
 
 	// debug section
 	if os.Getenv("DEBUG") == "true" {
-		file, err := os.Create(filepath.Join(sourceDirDebug, filenameDebug))
-		if err != nil {
+		if err := file.FileCreation(filepath.Join(sourceDirDebug, filenameDebug), strings.NewReader(`Hello from Windows in Docker.
+This is the file it should be copied by using robocopy.`)); err != nil {
 			fmt.Fprintf(os.Stderr, "debug mode: failed file creation: %v", err.Error())
-			return
-		}
-		defer file.Close()
-		if _, err := file.WriteString(`Hello from Windows in Docker.
-This is the file it should be copied by using robocopy.`); err != nil {
-			fmt.Fprintf(os.Stderr, "debug mode: failed file content writing: %v", err.Error())
 			return
 		}
 	}
