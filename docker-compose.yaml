@@ -6,6 +6,7 @@ services:
       VERSION: "11l"
       KEYBOARD: "it-IT"
       REGION: "en-US"
+      RAM_SIZE: "2G"
     devices:
       - /dev/kvm
       - /dev/net/tun
@@ -19,5 +20,5 @@ services:
     volumes:
       - ./windows:/storage
       - ./testdata:/shared
-    restart: always
+    restart: unless-stopped
     stop_grace_period: 2m

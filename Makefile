@@ -1,5 +1,9 @@
 include .env
 
+# end2end tests the application locally
+end2end:
+	go test -tags=integration
+
 # win_setup runs the docker 
 win_setup:
 	docker compose up --no-recreate -d
